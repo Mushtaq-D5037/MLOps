@@ -86,7 +86,7 @@ prediction_output_folder  = PipelineData(name='prediction_output',  datastore=da
    
 # creating pipeline steps
 pre_process_step = PythonScriptStep(name = 'step 1: Data Preparation', 
-                                    script_name='prod-pre_process-aggModel.py', 
+                                    script_name='pre_process.py', 
                                     arguments= [
                                                 '--input_data_eu'  , df_eu.as_named_input('raw_data_eu'), 
                                                 '--input_data_la'  , df_la.as_named_input('raw_data_la'),
@@ -102,7 +102,7 @@ pre_process_step = PythonScriptStep(name = 'step 1: Data Preparation',
                                     source_directory=None)
 
 prediction_step = PythonScriptStep(name = 'step 2: Training & Prediction', 
-                                    script_name='prod-prediction-aggModel.py', 
+                                    script_name='prediction.py', 
                                     arguments= ['--input_data',pre_process_output_folder, '--output', prediction_output_folder], 
                                     inputs   = [pre_process_output_folder], 
                                     outputs  = [prediction_output_folder], 
@@ -112,7 +112,7 @@ prediction_step = PythonScriptStep(name = 'step 2: Training & Prediction',
                                     source_directory=None) 
 
 overlay_step = PythonScriptStep(name = 'step 3: Overlaying Features ', 
-                                script_name='prod-overlay-aggModel.py', 
+                                script_name='overlay.py', 
                                 arguments= ['--raw_data', pre_process_output_folder, 
                                             '--main_data', pre_process_output_folder, 
                                             '--result_data',prediction_output_folder,
